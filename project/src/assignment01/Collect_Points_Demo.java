@@ -38,7 +38,11 @@ public class Collect_Points_Demo implements PlugInFilter {
 				}
 			}
 		}
-		
+
+
+
+
+
 		IJ.log("Found " + pntlist.size() + " foreground points.");
 		
 		// Copy 'ip' to a new color image and redraw some of the dots in red:
