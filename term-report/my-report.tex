@@ -1,0 +1,144 @@
+%% A simple template for a term report using the Hagenberg setup
+%% based on the standard LaTeX 'report' class
+%% äöüÄÖÜß  <-- no German Umlauts here? Use an UTF-8 compatible editor!
+
+%%% Magic comments for setting the correct parameters in compatible IDEs
+% !TeX encoding = utf8
+% !TeX program = pdflatex 
+% !TeX spellcheck = en_US
+% !BIB program = biber
+
+\documentclass[notitlepage,english]{hgbreport}
+
+\RequirePackage[utf8]{inputenc}		% remove when using lualatex oder xelatex!
+
+\graphicspath{{images/}}  % where are the images?
+\bibliography{references}  % requires file 'references.bib'
+
+\makeatletter
+\renewcommand{\@chapapp}{Assignment}
+\makeatother
+
+%%%----------------------------------------------------------
+\author{Peter A.\ Wiseguy}
+\title{IM520/MC505 Computer Vision\\ % the name of the course or project
+			Term Report}
+\date{\today}
+%%%----------------------------------------------------------
+\usepackage{mathtools}
+
+\usepackage[algo2e,ruled,vlined]{algorithm2e} 
+
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+
+%%%----------------------------------------------------------
+\begin{document}
+%%%----------------------------------------------------------
+
+\maketitle
+\thispagestyle{empty} 
+
+\begin{abstract}\noindent
+This document is adapted from the \texttt{HgbTermReport} template and based on the \texttt{hgb\-report} LaTeX class,
+which is part of the \textsf{HagenbergThesis} document package.
+See \url{https://github.com/Digital-Media/HagenbergThesis} for the most recent version
+and additional materials (tutorial, manual \etc).
+Use this \emph{Abstract} to provide a short summary of the contents in the remaining parts of the document.
+Note that it may be easier to place the individual chapters (``assignments'') in separate files
+and include them using \verb!\include{..}!.
+\end{abstract}
+
+
+%%%----------------------------------------------------------
+\tableofcontents
+%%%----------------------------------------------------------
+
+
+
+
+
+%%%----------------------------------------------------------
+\chapter{Circle detection in binary dot images}
+%%%----------------------------------------------------------
+
+
+\section {Introduction}
+The goal of this exercises was to find a points which could form a circle in a black-white image, consisting of random-noise. While the definition of the problem might not sound serious, research for possible solutions carried out.\cite{fourie2017robust} proposes Harmony Search, an optimization method inspired by music.In \cite{alomari2013randomized} authors propose randomized algorithm, incorporating also edge detection.
+
+
+\section {Approach}
+
+To describe approach which was used to solve the problem, firstly some notation should be stated. A point in a 2 dimensional space is defined as follows:
+\[p_{i}=(u_{i},k_{i})\]
+where \i is an index of i-th point
+Equation of a circle is defined as follows:
+\[(x-x_{i})^2+(y-y_{i})^2=r^2\]
+where \i is an index of i-th point
+
+
+The algorithm is based on collecting all of the points (that is to say, checking which pixel of an image is black, when we operate on white background or white, when the colors are reversed). In the next step random sample of three points is performed. Having three points selected,  it is possible to obtain circle equation. Basing on \cite{wiki:Circles} and high school mathematics materials available in the internet, such as \cite{eisle}, following equations are obtained:
+
+\[x_{i}=\frac{(x_{1}^2+y_{1}^2)(y_{2}-y_{3})+(x_{2}^2+y_{2}^2)(y_{3}-y_{1})+(x_{3}^2+y_{3}^2)(y_{1}-y_{2})}{2(x_{1}(y_{2}-y_{3})-y_{1}(x_{2}-x_{3})+x_{2}y_{3}-x_{3}y_{2})}\]
+\[y_{i}=\frac{(x_{1}^2+y_{1}^2)(x_{3}-x_{2})+(x_{2}^2+y_{2}^2)(x_{1}-x_{3})+(x_{3}^2+y_{3}^2)(x_{2}-x_{1})} {2(x_{1}(y_{2}-y_{3})-y_{1}(x_{2}-x_{3})+x_{2}y_{3}-x_{3}y_{2})}\]
+\[r=\sqrt{(x-x_{i})^2+(y-y_{i})^2)}\]
+
+In every iteration of the algorithm basing on sampled points a circle equation is estimated. In further step it is verified how many points lay near formed circle. Some treshold must be put to measure closeness to the obtained circle. For this purpose following equation was used:
+\[\abs{(x-x_{i})^2+(y-y_{i})^2-r^2}\le0.5\]			
+
+Formula above  describes how far the point could lay from the obtained circle, regardless of direction (inside or outside the circle) to be considered.
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwResult{Best parameters for circle}
+ Set following variables:
+\[max\_number\_of\_points\_near\_circle=0\] 
+ \[best\_radius=0\] 
+ \[best\_x=0\] 
+ \[best\_y=0\] 
+ \For{$i\gets0$ \KwTo $number\_of\_iterations$ }{
+   Randomly sample three points 
+  \[number\_of\_points\_close\_to\_circle=0\]
+   \uIf{if not collinear}{
+	Calculate circle equation 
+
+	 \ForEach{point in points}{
+		 \uIf{meet criterion}{
+			\[number\_of\_points\_close\_to\_circle++\]	
+		}
+	 }
+
+
+	
+       }
+    }
+ \caption{Algorithm pseudocode}
+\end{algorithm}
+
+
+
+
+
+\section {Research question B}
+
+
+
+
+
+%%%----------------------------------------------------------
+\chapter*{Summary}
+\addcontentsline{toc}{chapter}{Summary}
+%%%----------------------------------------------------------
+
+Finally, summarize what has been accomplished in this semester and what not. 
+Point out topics that were instructive, confusing, too hard, too easy \etc 
+Perhaps you even found problems that you would like to explore deeper (\eg, 
+in a project).
+
+
+%%%----------------------------------------------------------
+\MakeBibliography[nosplit]
+%%%----------------------------------------------------------
+
+
+\end{document}
