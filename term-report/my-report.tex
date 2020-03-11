@@ -36,25 +36,6 @@
 \begin{document}
 %%%----------------------------------------------------------
 
-\maketitle
-\thispagestyle{empty} 
-
-\begin{abstract}\noindent
-This document is adapted from the \texttt{HgbTermReport} template and based on the \texttt{hgb\-report} LaTeX class,
-which is part of the \textsf{HagenbergThesis} document package.
-See \url{https://github.com/Digital-Media/HagenbergThesis} for the most recent version
-and additional materials (tutorial, manual \etc).
-Use this \emph{Abstract} to provide a short summary of the contents in the remaining parts of the document.
-Note that it may be easier to place the individual chapters (``assignments'') in separate files
-and include them using \verb!\include{..}!.
-\end{abstract}
-
-
-%%%----------------------------------------------------------
-\tableofcontents
-%%%----------------------------------------------------------
-
-
 
 
 
@@ -107,7 +88,10 @@ Formula above  describes how far the point could lay from the obtained circle, r
 			\[number\_of\_points\_close\_to\_circle++\]	
 		}
 	 }
-
+	 \uIf{number\_of\_points\_close\_to\_circle>max\_number\_of\_points\_near\_circle}{
+			max\_number\_of\_points\_near\_circle=number\_of\_points\_close\_to\_circle
+			set best\_x,best\_y,best\_radius
+		}
 
 	
        }
@@ -115,25 +99,17 @@ Formula above  describes how far the point could lay from the obtained circle, r
  \caption{Algorithm pseudocode}
 \end{algorithm}
 
+\section {Results}
 
+\section {Research question A}
 
+Given specified amount of points being total number of points, m and points which belongs to circle n, probability of drawing a 3 circle points in a random draw could be described as follows:
+\[p=\frac{\binom{n}{3}}{\binom{m}{3}}\]
 
 
 \section {Research question B}
 
-
-
-
-
-%%%----------------------------------------------------------
-\chapter*{Summary}
-\addcontentsline{toc}{chapter}{Summary}
-%%%----------------------------------------------------------
-
-Finally, summarize what has been accomplished in this semester and what not. 
-Point out topics that were instructive, confusing, too hard, too easy \etc 
-Perhaps you even found problems that you would like to explore deeper (\eg, 
-in a project).
+The above algorithm could be somehow extended in such way that not only the best one with largest number of points in neighbourhood could be stored but a couple of them. If these circles are different then their parameters, that is center and radius should be different. The first circle with biggest number of points close to it and also with significantly different parameters can be potentially other circle. 
 
 
 %%%----------------------------------------------------------
