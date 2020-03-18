@@ -125,6 +125,30 @@ Given specified amount of points being total number of points, m and points whic
 The above algorithm could be somehow extended in such way that not only the best one with largest number of points in neighbourhood could be stored but a couple of them. If these circles are different then their parameters, that is center and radius should be different. The first circle with biggest number of points close to it and also with significantly different parameters can be potentially other circle. 
 
 
+
+
+%%%----------------------------------------------------------
+\chapter{Affine Point Cloud Matching}
+%%%----------------------------------------------------------
+\section {Matching point sets by brute force or RANSAC}
+\subsubsection{If your computer could perform 1 million such tests per second, how long
+would it take to examine all possible 3-point matches, if 𝑚 = 10, 50, 1000?}
+
+
+\begin{figure}[!htbp]
+\caption{Obtained circle}
+\includegraphics{assignment02_ramsac}
+\end{figure}
+As can be seen on the figure above, number of possible combinations grows expotentially, since each point is matched with each another. When m=10 the experiment would last 1000 seconds, not even comparing to m=50 or m=100. This explains why RANSAC approach is almost completely useless in such case. 
+
+
+
+\section {Implement/test the affine transformation}
+
+
+
+\section {Implement/test the affine transformation}
+
 %%%----------------------------------------------------------
 \MakeBibliography[nosplit]
 %%%----------------------------------------------------------
