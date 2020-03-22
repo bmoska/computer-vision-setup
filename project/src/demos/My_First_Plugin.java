@@ -7,7 +7,7 @@ import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageProcessor;
 
 public class My_First_Plugin implements PlugInFilter {
-	
+
 	static {
 		 LogStream.redirectSystem();	// to make System.out.println() work
 	}
@@ -18,7 +18,7 @@ public class My_First_Plugin implements PlugInFilter {
 
 	public void run(ImageProcessor ip) {
 		IJ.log("Text output to the ImageJ console.");
-		
+
 		int w = ip.getWidth();
 		int h = ip.getHeight();
 
@@ -28,7 +28,7 @@ public class My_First_Plugin implements PlugInFilter {
 				ip.putPixel(u, v, 255 - p);
 			}
 		}
-		
+
 		System.out.println("Done.");
 	}
 }

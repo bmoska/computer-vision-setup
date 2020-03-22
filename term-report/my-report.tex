@@ -29,14 +29,26 @@
 
 \usepackage[algo2e,ruled,vlined]{algorithm2e} 
 \usepackage[section]{placeins}
-
+\usepackage{bm}
 
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 
+
+
+%%%----------------------------------------------------------
+\author{Błażej Moska}
+\title{IM520/MC505 Computer Vision\\ % the name of the course or project
+			Term Report}
+\date{\today}
+%%%----------------------------------------------------------
+
+
+%%%-----------
 %%%----------------------------------------------------------
 \begin{document}
 %%%----------------------------------------------------------
-
+\maketitle
+\thispagestyle{empty} 
 
 
 
@@ -105,8 +117,8 @@ Formula above  describes how far the point could lay from the obtained circle, r
 Result of this assigment is an circle equation which satisfies the condition mentioned in previous section.
 
 \begin{figure}[!htbp]
+\fbox{\includegraphics{circle}}
 \caption{Obtained circle}
-\includegraphics{circle}
 \end{figure}
 
 Analysis of the above figure leads to conclusion that the obtained circle is exactly as expected. After receiving best parameters it was drawn using function embedded in ImageJ drawOval , with these parameters.
@@ -132,12 +144,12 @@ The above algorithm could be somehow extended in such way that not only the best
 %%%----------------------------------------------------------
 \section {Matching point sets by brute force or RANSAC}
 \subsubsection{If your computer could perform 1 million such tests per second, how long
-would it take to examine all possible 3-point matches, if 𝑚 = 10, 50, 1000?}
+would it take to examine all possible 3-point matches, if m = 10, 50, 1000}
 
 
 \begin{figure}[!htbp]
-\caption{Obtained circle}
 \includegraphics{assignment02_ramsac}
+\caption{Obtained circle}
 \end{figure}
 As can be seen on the figure above, number of possible combinations grows expotentially, since each point is matched with each another. When m=10 the experiment would last 1000 seconds, not even comparing to m=50 or m=100. This explains why RANSAC approach is almost completely useless in such case. 
 
@@ -147,7 +159,101 @@ As can be seen on the figure above, number of possible combinations grows expote
 
 
 
-\section {Implement/test the affine transformation}
+
+Transformation indeed performed well, almost perfectly mapping set X to set X'. Almost, because there is a place for error because the results are not perfect pixel positions. 
+
+Affine transformation is:
+\begin{equation}
+\begin{pmatrix} 0.013 & 1.088 & 18.688 \\ -1.000 &  -0.050 & 127.500  \end{pmatrix}
+\end{equation}
+
+
+Using above matrix on X a X' is obtained. Results are presented in the \textit{\textbf{Fig 2.3}}:
+
+Mapping error, i.e the difference between points mapped by affine transformation and real points is defined using following equation:
+\begin{equation}
+\epsilon_{total}=\sum_{i=0}^{n}\|\bm{A}*\bm{x_{i}}-\bm{x_{i}}\|^2
+\end{equation}
+
+
+
+
+
+\begin{figure}[!htbp]
+  \centering
+  \begin{minipage}[b]{0.4\textwidth}
+
+  \includegraphics[width=5cm,height=5cm]{results_projection_assignment2_cropped}
+  \caption{Transformed image}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.4\textwidth}
+    \fbox{\includegraphics[width=\textwidth]{test-point-set2}}
+    \caption{Real image}
+  \end{minipage}
+\end{figure}
+
+
+
+Calculated error was as follows:
+\begin{equation}
+\epsilon_{total}=5.72
+\end{equation}
+
+
+
+
+
+\section {Structuring point sets by triangulation}
+\subsubsection{Idea of triangulation}
+While using RANSAC is almost impossible because of computational reason, a way to overcome this problem is triangulation. Points from one set are structured using Delaunay algorithm. Given triangles in both set it is easier to perform calculations.
+
+
+\begin{algorithm}[H]
+
+ Set following variables:
+\[lowestError=Inf\] 
+ \[bestAffine=emptyMatrix()\] 
+ \[bestTransformedPoints=emptyMatrix()\] 
+Perform triangulation of X \newline
+Perform triangulation of X' \newline
+
+ \For{$i\gets0$ \KwTo $number\_of\_triangles\_in\_X$ }{
+	Take points from triangle from X dataset \newline
+	 \For{$i\gets0$ \KwTo $number\_of\_triangles\_in\_X'$ }{
+			Take points from triangle from X' dataset \newline
+			\ForEach{permutation of points in X'}{
+			 	calculate  affine \newline
+			 	calculate  transformedPoints \newline
+				map X to X \newline
+				calculate error \newline
+				 \uIf{ error<lowestError}{
+					\[lowestError=error\]	
+					\[bestAffine=affine\]	
+					\[bestTransformedPoints=transformedPoints\]	
+			      }
+			}
+	
+       }
+    }
+ \caption{Algorithm pseudocode}
+\end{algorithm}
+
+
+Calculated matrix is as follows:
+\begin{equation}
+\begin{pmatrix} 0.019 & 1.096 & 17.827 \\ -0.98 &  -0.047 & 126.541  \end{pmatrix}
+\end{equation}
+
+
+
+\subsubsection{Research Question}
+
+Affine invariancy, taken in simple words and according to \cite{affine}, that applying affine transformation to triangulised data would be the same as triangulation  of affine transformed data. This could be checked as performing triangulation on given X set and then applying affine transformation to compare whether it is the same as triangulation affine-transformed set X'.
+
+\subsubsection{Complexity}
+
+Complexity in this particular case is based on basic operation being solving system of equation. Having n points, n-2 triangles are formed in each set (X and X').We compare each triangle from set X with each of X', bearing in mind that permutations are considered (3 points in triangles, resulting in 6 triangles). Overall a square complexity is obtained \(O(n^2)\)
 
 %%%----------------------------------------------------------
 \MakeBibliography[nosplit]
